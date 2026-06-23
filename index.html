@@ -63,11 +63,11 @@
 <script src="cloud-sync.js"></script>
 
 <!-- Shared components / screens (same files as the prototype) -->
-<script type="text/babel" src="ui-kit.jsx?v=20260623a"></script>
-<script type="text/babel" src="home-screen.jsx?v=20260623a"></script>
-<script type="text/babel" src="record-flow.jsx?v=20260623a"></script>
-<script type="text/babel" src="review-screen.jsx?v=20260623a"></script>
-<script type="text/babel" src="auth-screen.jsx?v=20260623a"></script>
+<script type="text/babel" src="ui-kit.jsx?v=20260623d"></script>
+<script type="text/babel" src="home-screen.jsx?v=20260623d"></script>
+<script type="text/babel" src="record-flow.jsx?v=20260623d"></script>
+<script type="text/babel" src="review-screen.jsx?v=20260623d"></script>
+<script type="text/babel" src="auth-screen.jsx?v=20260623d"></script>
 
 <!-- Root app (frameless) -->
 <script type="text/babel">
@@ -79,16 +79,16 @@ const FONT_MAP = {
   dm:      '"DM Sans", system-ui, sans-serif',
   serif:   '"Noto Serif SC", Georgia, serif',
 };
-const APP_LOOK = { accentColor: "#37332E", radius: 1.2, typeface: "system" };
+const APP_LOOK = { accentColor: "#8B8478", radius: 1.2, typeface: "system" };
 
-// User-selectable theme colors (deep, muted tones that pair with the warm off-white bg)
+// User-selectable theme colors — muted Morandi tones (soft, grayed, warm)
 window.ACCENT_OPTIONS = [
-  { id: "ink",   name: "墨",   hex: "#37332E" },
-  { id: "blue",  name: "黛",   hex: "#3E5C76" },
-  { id: "green", name: "松",   hex: "#4E6B57" },
-  { id: "clay",  name: "赭",   hex: "#A75A45" },
-  { id: "plum",  name: "紫",   hex: "#6E5773" },
-  { id: "gold",  name: "棕",   hex: "#8C6239" },
+  { id: "ink",   name: "黛",   hex: "#8B8478" },
+  { id: "blue",  name: "雾蓝", hex: "#8AA1AC" },
+  { id: "green", name: "灰绿", hex: "#9DAA8C" },
+  { id: "clay",  name: "陶",   hex: "#C39684" },
+  { id: "plum",  name: "藕",   hex: "#BA9499" },
+  { id: "gold",  name: "杏",   hex: "#C3AB7D" },
 ];
 
 function hexToRgb(hex){const h=hex.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
