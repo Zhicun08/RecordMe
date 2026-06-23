@@ -63,11 +63,11 @@
 <script src="cloud-sync.js"></script>
 
 <!-- Shared components / screens (same files as the prototype) -->
-<script type="text/babel" src="ui-kit.jsx?v=20260617a"></script>
-<script type="text/babel" src="home-screen.jsx?v=20260617a"></script>
-<script type="text/babel" src="record-flow.jsx?v=20260617a"></script>
-<script type="text/babel" src="review-screen.jsx?v=20260617a"></script>
-<script type="text/babel" src="auth-screen.jsx?v=20260617a"></script>
+<script type="text/babel" src="ui-kit.jsx?v=20260623a"></script>
+<script type="text/babel" src="home-screen.jsx?v=20260623a"></script>
+<script type="text/babel" src="record-flow.jsx?v=20260623a"></script>
+<script type="text/babel" src="review-screen.jsx?v=20260623a"></script>
+<script type="text/babel" src="auth-screen.jsx?v=20260623a"></script>
 
 <!-- Root app (frameless) -->
 <script type="text/babel">
@@ -81,11 +81,32 @@ const FONT_MAP = {
 };
 const APP_LOOK = { accentColor: "#37332E", radius: 1.2, typeface: "system" };
 
+// User-selectable theme colors (deep, muted tones that pair with the warm off-white bg)
+window.ACCENT_OPTIONS = [
+  { id: "ink",   name: "墨",   hex: "#37332E" },
+  { id: "blue",  name: "黛",   hex: "#3E5C76" },
+  { id: "green", name: "松",   hex: "#4E6B57" },
+  { id: "clay",  name: "赭",   hex: "#A75A45" },
+  { id: "plum",  name: "紫",   hex: "#6E5773" },
+  { id: "gold",  name: "棕",   hex: "#8C6239" },
+];
+
 function hexToRgb(hex){const h=hex.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
 function lightenHex(hex,amt){const [r,g,b]=hexToRgb(hex);const mix=v=>Math.round(v+(255-v)*amt);return `#${[mix(r),mix(g),mix(b)].map(v=>v.toString(16).padStart(2,'0')).join('')}`;}
 
-window.C.primary  = APP_LOOK.accentColor;
-window.C.primaryL = lightenHex(APP_LOOK.accentColor, 0.72);
+// Apply an accent hex to the shared color object (read at render time by all components)
+window.applyAccent = function(hex){
+  window.C.primary  = hex;
+  window.C.primaryL = lightenHex(hex, 0.72);
+};
+
+// Restore the saved color, falling back to the default
+function loadAccent(){
+  try { const s = localStorage.getItem('recordme_accent'); if (s) return s; } catch(e) {}
+  return APP_LOOK.accentColor;
+}
+
+window.applyAccent(loadAccent());
 window.RM_R       = APP_LOOK.radius;
 window.RM_FONT    = FONT_MAP[APP_LOOK.typeface];
 
@@ -111,6 +132,13 @@ function RecordMeApp() {
     return [];
   });
   const [detailEntry, setDetailEntry] = React.useState(null);
+  const [accent, setAccent] = React.useState(() => C.primary);
+
+  function changeAccent(hex){
+    window.applyAccent(hex);
+    try { localStorage.setItem('recordme_accent', hex); } catch(e) {}
+    setAccent(hex); // re-render whole tree so all C.primary reads update
+  }
 
   // Keep live refs so sync can read latest local state without stale closures
   const entriesRef = React.useRef(entries); entriesRef.current = entries;
@@ -206,6 +234,7 @@ function RecordMeApp() {
           email={session.user && session.user.email}
           syncState={syncState}
           entries={entries} wins={wins}
+          accent={accent} onAccent={changeAccent}
           onResync={syncAll}
           onSignOut={handleSignOut}
           onClose={() => setShowSettings(false)}

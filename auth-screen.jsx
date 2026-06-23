@@ -135,7 +135,7 @@ function SyncBadge({ state }) {
   );
 }
 
-function SettingsSheet({ email, syncState, entries, wins, onSignOut, onResync, onClose }) {
+function SettingsSheet({ email, syncState, entries, wins, accent, onAccent, onSignOut, onResync, onClose }) {
   function exportData() {
     const blob = new Blob([JSON.stringify({ entries, wins, exportedAt: new Date().toISOString() }, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -179,6 +179,29 @@ function SettingsSheet({ email, syncState, entries, wins, onSignOut, onResync, o
         </div>
 
         <Row label="立即同步" sub="从云端拉取最新记录" onClick={onResync} />
+
+        <div style={{ padding: "15px 0", borderBottom: `1px solid ${C.border}` }}>
+          <span style={{ display: "block", fontSize: 15, color: C.text, fontWeight: 600, marginBottom: 12 }}>主题颜色</span>
+          <div style={{ display: "flex", gap: 14 }}>
+            {(window.ACCENT_OPTIONS || []).map(opt => {
+              const selected = accent === opt.hex;
+              return (
+                <button key={opt.id} onClick={() => onAccent && onAccent(opt.hex)} style={{
+                  display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
+                  background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "inherit",
+                }}>
+                  <span style={{
+                    width: 34, height: 34, borderRadius: "50%", background: opt.hex,
+                    boxShadow: selected ? `0 0 0 2px ${C.surface}, 0 0 0 4px ${opt.hex}` : "none",
+                    transition: "box-shadow .15s",
+                  }} />
+                  <span style={{ fontSize: 12, color: selected ? C.text : C.text3, fontWeight: selected ? 600 : 400 }}>{opt.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         <Row label="导出备份" sub="把所有记录存成一个文件" onClick={exportData} />
         <Row label="退出登录" sub="本机的本地记录会保留" danger onClick={onSignOut} />
 
